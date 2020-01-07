@@ -229,7 +229,17 @@ func NewAuthenticationHandler(cfg config.VerifierConfig) (*StoppableProxyHandler
 			// workaround since cookies is not copied from response into writer, see proxy.go#ServeHTTP
 			resp.Header.Add("Set-Cookie", cookie.String())
 		}
-		resp.Header.Add("Access-Control-Allow-Origin", redirectUrl.Scheme+"://"+redirectUrl.Host)
+
+		origin, err := url.Parse(r.Header.Get("Origin"))
+
+		if err == nil && strings.HasSuffix(origin.Host, "hackajob.co") {
+			/*
+				Allow hackajob hosts to do requests
+			 */
+			resp.Header.Add("Access-Control-Allow-Origin", r.Header.Get("Origin"))
+		} else {
+			resp.Header.Add("Access-Control-Allow-Origin", redirectUrl.Scheme+"://"+redirectUrl.Host)
+		}
 		resp.Header.Add("Access-Control-Allow-Credentials", "true")
 		return r, resp
 	}
