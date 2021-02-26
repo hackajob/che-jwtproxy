@@ -236,7 +236,7 @@ func NewAuthenticationHandler(cfg config.VerifierConfig) (*StoppableProxyHandler
 		}
 		origin, err := url.Parse(r.Header.Get("Origin"))
 
-		if err == nil && (strings.HasSuffix(origin.Host, "hackajob.co") || strings.HasSuffix(origin.Host, "dockerhost")) {
+		if err == nil && strings.HasSuffix(origin.Host, "hackajob.co") {
 			/*
 				Allow hackajob hosts to do requests
 			*/
